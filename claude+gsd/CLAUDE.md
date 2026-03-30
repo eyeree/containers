@@ -1,34 +1,11 @@
-# claude+gsd
-
-Docker image for running Claude Code with [get-shit-done](https://www.npmjs.com/package/get-shit-done-cc) inside [NVIDIA OpenShell](https://docs.nvidia.com/openshell/latest/about/overview.html) sandboxes. Provides an isolated, policy-controlled environment where Claude Code runs in `--dangerously-skip-permissions` mode with network egress restricted to declared endpoints.
-
-## Quick start
-
-```sh
-# Requires: openshell CLI, CLAUDE_CODE_OAUTH_TOKEN, GH_TOKEN or GITHUB_TOKEN
-./create [--name NAME] [repo...] [-- command...]
-```
-
-Examples:
-```sh
-./create owner/repo                  # clone one repo, run claude
-./create a/one b/two                 # clone multiple repos, run claude
-./create owner/repo -- zsh           # clone repo, run zsh instead
-./create -- zsh                      # no repos, run zsh
-./create                             # no repos, run claude
-./create --name my-box owner/repo    # clone repo, named sandbox
-```
-
-The `create` script:
-1. Ensures `claude-oauth` and `github` providers exist on the gateway (creates them if not)
-2. Builds and launches the sandbox from this directory's Dockerfile with `policy.yaml` applied
-3. Passes repos and optional command through to `entrypoint.sh`
+See @README.md for project overview
 
 ## Key files
 
 | File | Purpose |
 |---|---|
 | `Dockerfile` | Ubuntu 24.04 image with Claude Code, Node 24 (NVM), uv, gh CLI, get-shit-done-cc |
+| `build` | Builds the Docker image and pushes it to the OpenShell gateway, saves tag to `.image-tag` |
 | `create` | Host-side script to create an OpenShell sandbox, accepts multiple repos and optional command |
 | `entrypoint.sh` | In-container init: copies config, sets up git/gh auth, clones repos, launches command (default: Claude Code) |
 | `policy.yaml` | OpenShell policy (v1): filesystem, process, and network rules |

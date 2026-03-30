@@ -49,6 +49,7 @@ RUN userdel -r ubuntu 2>/dev/null || true \
 
 USER sandbox
 WORKDIR /sandbox
+ENV SHELL=/bin/zsh
 
 # Install claude code
 COPY --chown=sandbox:sandbox default.claude /sandbox/.claude
@@ -68,8 +69,9 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 # Install get-shit-done for Claude Code globally
 RUN bash -c '. "$NVM_DIR/nvm.sh" && npx get-shit-done-cc@latest --claude --global'
 
-# Copy .zshrc to a location outside the home volume
+# Copy shell configs to a location outside the home volume
 COPY --chown=sandbox:sandbox .zshrc /opt/claude-gsd/.zshrc
+COPY --chown=sandbox:sandbox .bashrc /opt/claude-gsd/.bashrc
 
 # Copy entrypoint to a location outside the home volume
 COPY --chown=sandbox:sandbox entrypoint.sh /opt/claude-gsd/entrypoint.sh

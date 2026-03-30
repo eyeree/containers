@@ -63,3 +63,4 @@ nvm use default --silent
 ######### NVM End #########
 
 export PATH="$HOME/.local/bin:$PATH"
+export CLAUDE_CONFIG_DIR="$HOME/.claude"

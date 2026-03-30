@@ -1,0 +1,37 @@
+#!/bin/bash
+set -euo pipefail
+
+# Build the Docker image and push it to the OpenShell gateway.
+# The resulting image tag is saved to .image-tag for use by `create`.
+#
+# Run this whenever the Dockerfile or build context changes.
+# Subsequent `create` calls will use the cached image (instant startup).
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+TAG_FILE="$SCRIPT_DIR/.image-tag"
+
+echo "Building and pushing image to gateway..."
+
+# Create a throwaway sandbox from the Dockerfile to trigger the build+push,
+# then extract the gateway image reference from the output.
+OUTPUT=$(openshell sandbox create \
+    --from "$SCRIPT_DIR" \
+    --no-keep \
+    -- echo "__build_done__" 2>&1)
+
+# Extract the gateway image tag from the build output
+GATEWAY_TAG=$(echo "$OUTPUT" | grep -oP 'openshell/sandbox-from:\K\d+' | head -1)
+
+if [ -z "$GATEWAY_TAG" ]; then
+    echo "Error: Could not extract gateway image tag from openshell output"
+    echo "$OUTPUT"
+    exit 1
+fi
+
+GATEWAY_REF="openshell/sandbox-from:$GATEWAY_TAG"
+echo "$GATEWAY_REF" > "$TAG_FILE"
+
+echo ""
+echo "Image pushed to gateway: $GATEWAY_REF"
+echo "Saved to $TAG_FILE"
+echo "Subsequent './create' calls will use this cached image."

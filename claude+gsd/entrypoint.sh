@@ -9,6 +9,7 @@ fi
 
 # Copy build-time config files into the home volume so they stay up to date
 cp /opt/claude-gsd/.zshrc "$HOME/.zshrc"
+cp /opt/claude-gsd/.bashrc "$HOME/.bashrc"
 
 # Source NVM
 export NVM_DIR="$HOME/.nvm"
