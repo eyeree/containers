@@ -42,19 +42,21 @@ RUN groupadd -r supervisor && useradd -r -g supervisor -s /usr/sbin/nologin supe
 # Create sandbox user (required by OpenShell, uid/gid 1000)
 RUN userdel -r ubuntu 2>/dev/null || true \
     && groupadd -g 1000 sandbox \
-    && useradd -m -s /bin/zsh -u 1000 -g sandbox sandbox \
+    && useradd -d /sandbox -s /bin/zsh -u 1000 -g sandbox sandbox \
+    && mkdir -p /sandbox \
+    && chown sandbox:sandbox /sandbox \
     && echo "sandbox ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER sandbox
-WORKDIR /home/sandbox
+WORKDIR /sandbox
 
 # Install claude code
-COPY --chown=sandbox:sandbox default.claude /home/sandbox/.claude
-ENV CLAUDE_CONFIG_DIR=/home/sandbox/.claude
+COPY --chown=sandbox:sandbox default.claude /sandbox/.claude
+ENV CLAUDE_CONFIG_DIR=/sandbox/.claude
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # Install NVM
-ENV NVM_DIR=/home/sandbox/.nvm
+ENV NVM_DIR=/sandbox/.nvm
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 
 # Install Node 24 via NVM

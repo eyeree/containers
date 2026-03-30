@@ -4,6 +4,6 @@
       "source": "github",
       "repo": "anthropics/claude-plugins-official"
     },
-    "installLocation": "/home/sandbox/.claude/plugins/marketplaces/claude-plugins-official"
+    "installLocation": "/sandbox/.claude/plugins/marketplaces/claude-plugins-official"
   }
 }

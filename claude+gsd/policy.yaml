@@ -12,7 +12,7 @@ filesystem_policy:
     - /var/log
     - /opt
   read_write:
-    - /home/sandbox
+    - /sandbox
     - /tmp
     - /dev/null
 
@@ -35,8 +35,8 @@ network_policies:
       - { path: /usr/bin/gh }
       - { path: /usr/bin/git }
       - { path: /usr/bin/curl }
-      - { path: "/home/sandbox/.local/share/claude/**" }
-      - { path: "/home/sandbox/.nvm/**" }
+      - { path: "/sandbox/.local/share/claude/**" }
+      - { path: "/sandbox/.nvm/**" }
 
   # ── GitHub git operations (clone, push, pull) ──────────────────────
   github_git:
@@ -47,8 +47,8 @@ network_policies:
       - { path: /usr/bin/git }
       - { path: /usr/bin/gh }
       - { path: /usr/bin/curl }
-      - { path: "/home/sandbox/.local/share/claude/**" }
-      - { path: "/home/sandbox/.nvm/**" }
+      - { path: "/sandbox/.local/share/claude/**" }
+      - { path: "/sandbox/.nvm/**" }
 
   # ── GitHub content CDN (raw files, LFS, releases, archives) ───────
   github_content:
@@ -62,8 +62,8 @@ network_policies:
       - { path: /usr/bin/gh }
       - { path: /usr/bin/curl }
       - { path: /usr/bin/wget }
-      - { path: "/home/sandbox/.local/share/claude/**" }
-      - { path: "/home/sandbox/.nvm/**" }
+      - { path: "/sandbox/.local/share/claude/**" }
+      - { path: "/sandbox/.nvm/**" }
 
   # ── Claude Code (API, OAuth, telemetry) ────────────────────────────
   claude_code:
@@ -76,9 +76,9 @@ network_policies:
       - { host: sentry.io, port: 443 }
       - { host: "*.githubusercontent.com", port: 443 }
     binaries:
-      - { path: "/home/sandbox/.local/share/claude/**" }
-      - { path: "/home/sandbox/.claude/**" }
-      - { path: "/home/sandbox/.nvm/**" }
+      - { path: "/sandbox/.local/share/claude/**" }
+      - { path: "/sandbox/.claude/**" }
+      - { path: "/sandbox/.nvm/**" }
 
   # ── npm registry ───────────────────────────────────────────────────
   npm_registry:
@@ -86,7 +86,7 @@ network_policies:
     endpoints:
       - { host: registry.npmjs.org, port: 443 }
     binaries:
-      - { path: "/home/sandbox/.nvm/**" }
+      - { path: "/sandbox/.nvm/**" }
       - { path: /usr/bin/curl }
 
   # ── PyPI (uv / pip) ───────────────────────────────────────────────
@@ -96,7 +96,7 @@ network_policies:
       - { host: pypi.org, port: 443 }
       - { host: files.pythonhosted.org, port: 443 }
     binaries:
-      - { path: "/home/sandbox/.local/bin/uv" }
-      - { path: "/home/sandbox/.cargo/bin/uv" }
+      - { path: "/sandbox/.local/bin/uv" }
+      - { path: "/sandbox/.cargo/bin/uv" }
       - { path: /usr/bin/python3 }
       - { path: /usr/bin/curl }

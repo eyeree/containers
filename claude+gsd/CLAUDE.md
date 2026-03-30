@@ -29,7 +29,7 @@ The `start` script:
 
 - User: `sandbox` (uid/gid 1000, required by OpenShell)
 - Shell: zsh
-- Working directory: `/home/sandbox/workspace` (after repo clone)
+- Working directory: `/sandbox/workspace` (after repo clone)
 - Config files stored in `/opt/claude-gsd/` to survive home volume mounts
 
 ## Environment variables
