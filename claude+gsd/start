@@ -1,0 +1,61 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+    echo "Usage: $0 <repo> [name]"
+    echo ""
+    echo "  repo   GitHub repo (owner/repo) or full git URL"
+    echo "  name   Sandbox name (default: derived from repo)"
+    echo ""
+    echo "Prerequisites:"
+    echo "  .env file in current directory with GH_TOKEN and CLAUDE_CODE_OAUTH_TOKEN"
+    exit 1
+}
+
+[ -z "${1:-}" ] && usage
+
+REPO="$1"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+NAME="${2:-$(basename "$REPO" .git)}"
+
+ENV_FILE=".env"
+if [ ! -f "$ENV_FILE" ]; then
+    echo "Error: .env file not found in current directory"
+    exit 1
+fi
+
+# Ensure claude-oauth provider exists (created once, reused across sandboxes)
+if ! openshell provider get claude-oauth &>/dev/null; then
+    if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+        echo "Error: Provider 'claude-oauth' not found and CLAUDE_CODE_OAUTH_TOKEN is not set."
+        exit 1
+    fi
+    echo "Creating claude-oauth provider..."
+    openshell provider create --name claude-oauth --type generic \
+        --credential CLAUDE_CODE_OAUTH_TOKEN
+fi
+
+# Ensure github provider exists (created once, reused across sandboxes)
+if ! openshell provider get github &>/dev/null; then
+    echo "Creating github provider..."
+    openshell provider create --name github --type github --from-existing
+fi
+
+# Create the sandbox (upload .env for credentials, pass repo as entrypoint arg)
+echo "Creating sandbox '$NAME' with repo $REPO..."
+echo openshell sandbox create \
+    --from "$SCRIPT_DIR" \
+    --policy "$SCRIPT_DIR/policy.yaml" \
+    --provider claude-oauth \
+    --provider github \
+    --upload "$ENV_FILE" \
+    --name "$NAME" \
+    -- /opt/claude-gsd/entrypoint.sh "$REPO" zsh
+openshell sandbox create \
+    --from "$SCRIPT_DIR" \
+    --policy "$SCRIPT_DIR/policy.yaml" \
+    --provider claude-oauth \
+    --provider github \
+    --upload "$ENV_FILE:/home/sandbox" \
+    --name "$NAME" \
+    -- /opt/claude-gsd/entrypoint.sh "$REPO" zsh
