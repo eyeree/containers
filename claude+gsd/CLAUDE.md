@@ -6,21 +6,31 @@ Docker image for running Claude Code with [get-shit-done](https://www.npmjs.com/
 
 ```sh
 # Requires: openshell CLI, CLAUDE_CODE_OAUTH_TOKEN, GH_TOKEN or GITHUB_TOKEN
-./start <owner/repo> [sandbox-name]
+./create [--name NAME] [repo...] [-- command...]
 ```
 
-The `start` script:
+Examples:
+```sh
+./create owner/repo                  # clone one repo, run claude
+./create a/one b/two                 # clone multiple repos, run claude
+./create owner/repo -- zsh           # clone repo, run zsh instead
+./create -- zsh                      # no repos, run zsh
+./create                             # no repos, run claude
+./create --name my-box owner/repo    # clone repo, named sandbox
+```
+
+The `create` script:
 1. Ensures `claude-oauth` and `github` providers exist on the gateway (creates them if not)
-2. Creates a per-sandbox provider with `GSD_REPO` pointing to the target repo
-3. Builds and launches the sandbox from this directory's Dockerfile with `policy.yaml` applied
+2. Builds and launches the sandbox from this directory's Dockerfile with `policy.yaml` applied
+3. Passes repos and optional command through to `entrypoint.sh`
 
 ## Key files
 
 | File | Purpose |
 |---|---|
 | `Dockerfile` | Ubuntu 24.04 image with Claude Code, Node 24 (NVM), uv, gh CLI, get-shit-done-cc |
-| `start` | Host-side script to create an OpenShell sandbox for a given repo |
-| `entrypoint.sh` | In-container init: copies config, sets up git/gh auth, clones `GSD_REPO`, launches Claude Code |
+| `create` | Host-side script to create an OpenShell sandbox, accepts multiple repos and optional command |
+| `entrypoint.sh` | In-container init: copies config, sets up git/gh auth, clones repos, launches command (default: Claude Code) |
 | `policy.yaml` | OpenShell policy (v1): filesystem, process, and network rules |
 | `default.claude/` | Default Claude Code config copied into the image at build time (bypass permissions, opus model) |
 | `.zshrc` | Shell config with git aliases and NVM setup |
@@ -38,7 +48,6 @@ The `start` script:
 |---|---|---|
 | `CLAUDE_CODE_OAUTH_TOKEN` | Yes | OAuth token for Claude Code API access (injected via OpenShell provider, never inside sandbox) |
 | `GH_TOKEN` / `GITHUB_TOKEN` | Yes | GitHub auth (injected via OpenShell provider) |
-| `GSD_REPO` | Set by `start` | GitHub repo to clone (owner/repo format) |
 | `GIT_USER_NAME` | No | Git commit author name |
 | `GIT_USER_EMAIL` | No | Git commit author email |
 

@@ -1,3 +1,5 @@
+source ~/.env
+
 typeset -ga precmd_functions
 typeset -ga preexec_functions
 autoload colors

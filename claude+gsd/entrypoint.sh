@@ -35,17 +35,29 @@ if [ ! -d "$CLAUDE_CONFIG_DIR/plugins/marketplaces/claude-plugins-official" ]; t
     claude plugin marketplace update 2>/dev/null
 fi
 
-# First argument is the repo to clone
-REPO="${1:-}"
-shift 2>/dev/null || true
+# Parse arguments: repos before --, command after --
+REPOS=()
+CMD_ARGS=()
+SEEN_DASHDASH=false
+for arg in "$@"; do
+    if [[ "$SEEN_DASHDASH" == "true" ]]; then
+        CMD_ARGS+=("$arg")
+    elif [[ "$arg" == "--" ]]; then
+        SEEN_DASHDASH=true
+    else
+        REPOS+=("$arg")
+    fi
+done
 
-# Clone the repo if specified and workspace doesn't exist yet
-echo "Cloning $REPO..."
-git clone "$REPO"
+# Clone all specified repos
+for repo in "${REPOS[@]}"; do
+    echo "Cloning $repo..."
+    git clone "$repo"
+done
 
-# Remaining args are the command to run, default to claude
-if [ $# -eq 0 ]; then
+# Run command (default: claude)
+if [ ${#CMD_ARGS[@]} -eq 0 ]; then
     exec claude --dangerously-skip-permissions
 else
-    exec "$@"
+    exec "${CMD_ARGS[@]}"
 fi
