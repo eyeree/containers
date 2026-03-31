@@ -56,6 +56,12 @@ for repo in "${REPOS[@]}"; do
     git clone "$repo"
 done
 
+# If exactly one repo, start in its directory
+if [ ${#REPOS[@]} -eq 1 ]; then
+    dir=$(basename "${REPOS[1]}" .git)
+    cd "$dir"
+fi
+
 # Run command (default: claude)
 if [ ${#CMD_ARGS[@]} -eq 0 ]; then
     exec claude --dangerously-skip-permissions
