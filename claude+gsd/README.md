@@ -2,6 +2,9 @@
 
 Docker image for running Claude Code with [get-shit-done](https://www.npmjs.com/package/get-shit-done-cc) inside [NVIDIA OpenShell](https://docs.nvidia.com/openshell/latest/about/overview.html) sandboxes. Provides an isolated, policy-controlled environment where Claude Code runs in `--dangerously-skip-permissions` mode with network egress restricted to declared endpoints.
 
+> [!WARNING]
+> Currently doesn't use OpenShell providers for git or Claude Code credentials. OpenShell's handling of credentials, where they are injected by a network proxy service and not actually stored in the sandbox container, doesn't seem to work with Claude Code OAuth tokens (used for Max subscription) or with many github cli commands. At this time you have to create an .env file with these credentials, and the file is uploaded to the container when it is started.
+
 ## Quick start
 
 ```sh
