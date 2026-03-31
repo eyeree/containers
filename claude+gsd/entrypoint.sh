@@ -1,7 +1,24 @@
 #!/bin/zsh
 
-# Load environment from uploaded .env file (workaround for provider credential injection)
-if [ -f "$HOME/.env" ]; then
+# Parse arguments: repos before --, command after --
+REPOS=()
+CMD_ARGS=()
+SEEN_DASHDASH=false
+while [ $# -gt 0 ]; do
+    if $SEEN_DASHDASH; then
+        CMD_ARGS+=("$1")
+    elif [ "$1" = "--" ]; then
+        SEEN_DASHDASH=true
+    else
+        REPOS+=("$1")
+    fi
+    shift
+done
+
+# Load environment from uploaded env file
+if [ -d "$HOME/.tmpenv" ]; then
+    mv "$HOME/.tmpenv"/* "$HOME/.env"
+    rm -r "$HOME/.tmpenv"
     set -a
     source "$HOME/.env"
     set +a
@@ -36,20 +53,6 @@ if [ ! -d "$CLAUDE_CONFIG_DIR/plugins/marketplaces/claude-plugins-official" ]; t
     claude plugin marketplace update 2>/dev/null
 fi
 
-# Parse arguments: repos before --, command after --
-REPOS=()
-CMD_ARGS=()
-SEEN_DASHDASH=false
-for arg in "$@"; do
-    if [[ "$SEEN_DASHDASH" == "true" ]]; then
-        CMD_ARGS+=("$arg")
-    elif [[ "$arg" == "--" ]]; then
-        SEEN_DASHDASH=true
-    else
-        REPOS+=("$arg")
-    fi
-done
-
 # Clone all specified repos
 for repo in "${REPOS[@]}"; do
     echo "Cloning $repo..."
@@ -62,9 +65,12 @@ if [ ${#REPOS[@]} -eq 1 ]; then
     cd "$dir"
 fi
 
-# Run command (default: claude)
+# Run command (default: claude inside interactive zsh)
 if [ ${#CMD_ARGS[@]} -eq 0 ]; then
-    exec claude --dangerously-skip-permissions
+    # Start interactive zsh which auto-launches claude via precmd hook.
+    # ctrl+z suspends claude to the shell; when claude exits normally, shell exits too.
+    export CLAUDE_AUTOSTART=1
+    exec zsh -i
 else
     exec "${CMD_ARGS[@]}"
 fi

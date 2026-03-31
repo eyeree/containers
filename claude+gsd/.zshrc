@@ -64,3 +64,15 @@ nvm use default --silent
 
 export PATH="$HOME/.local/bin:$PATH"
 export CLAUDE_CONFIG_DIR="$HOME/.claude"
+
+# Auto-start claude when CLAUDE_AUTOSTART is set (by entrypoint.sh)
+if [[ -n "${CLAUDE_AUTOSTART:-}" ]]; then
+    unset CLAUDE_AUTOSTART
+    _claude_autostart() {
+        precmd_functions=(${precmd_functions:#_claude_autostart})
+        claude
+        # Exit shell if claude exited normally (no suspended jobs)
+        (( ${#jobstates} == 0 )) && echo \\nexiting && exit
+    }
+    precmd_functions+=(_claude_autostart)
+fi

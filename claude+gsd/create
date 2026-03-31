@@ -123,7 +123,7 @@ OPENSHELL_ARGS=(
     sandbox create
     --from "$IMAGE_FROM"
     --policy "$SCRIPT_DIR/policy.yaml"
-    --upload "$ENV_FILE"
+    --upload "$ENV_FILE:.tmpenv"
 )
 if [ -n "$NAME" ]; then
     OPENSHELL_ARGS+=(--name "$NAME")
@@ -131,4 +131,5 @@ fi
 OPENSHELL_ARGS+=(-- /opt/claude-gsd/entrypoint.sh ${ENTRYPOINT_ARGS[@]+"${ENTRYPOINT_ARGS[@]}"})
 
 echo "Creating sandbox${NAME:+ '$NAME'} with ${#REPOS[@]} repo(s)..."
+echo openshell "${OPENSHELL_ARGS[@]}"
 openshell "${OPENSHELL_ARGS[@]}"
