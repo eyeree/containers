@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <container-name>" >&2
+    exit 1
+fi
+
+NAME="$1"
+
+docker exec -it "$NAME" zsh

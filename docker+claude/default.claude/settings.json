@@ -1,0 +1,8 @@
+{
+  "effortLevel": "high",
+  "model": "opus",
+  "skipDangerousModePermissionPrompt": true,
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  }
+}

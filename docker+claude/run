@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <container-name>" >&2
+    exit 1
+fi
+
+NAME="$1"
+WORKSPACE_DIR="$(pwd)"
+
+# Search up directory tree for .sandbox.env starting from WORKSPACE_DIR
+SANDBOX_ENV_FILE=""
+search_dir="$WORKSPACE_DIR"
+while true; do
+    if [ -f "$search_dir/sandbox.env" ]; then
+        SANDBOX_ENV_FILE="$search_dir/sandbox.env"
+        break
+    fi
+    parent="$(dirname "$search_dir")"
+    if [ "$parent" = "$search_dir" ]; then
+        break
+    fi
+    search_dir="$parent"
+done
+
+echo WORKSPACE_DIR=$WORKSPACE_DIR
+echo SANDBOX_ENV_FILE=$SANDBOX_ENV_FILE
+
+cd "$(dirname "$0")"
+
+WORKSPACE_DIR="$WORKSPACE_DIR" SANDBOX_ENV_FILE="${SANDBOX_ENV_FILE:-/dev/null}" docker compose -p "$NAME" run --rm --name "$NAME" -e "CONTAINER_NAME=$NAME" sandbox

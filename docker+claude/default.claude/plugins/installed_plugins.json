@@ -1,0 +1,60 @@
+{
+  "version": 2,
+  "plugins": {
+    "context7@claude-plugins-official": [
+      {
+        "scope": "project",
+        "installPath": "/home/sandbox/.claude/plugins/cache/claude-plugins-official/context7/158ef95c6f7f",
+        "version": "158ef95c6f7f",
+        "installedAt": "2026-03-19T00:20:47.850Z",
+        "lastUpdated": "2026-03-19T00:20:47.850Z",
+        "gitCommitSha": "158ef95c6f7fc1b5629b5a915e2af2c07d15e237",
+        "projectPath": "/home/sandbox"
+      }
+    ],
+    "code-review@claude-plugins-official": [
+      {
+        "scope": "project",
+        "installPath": "/home/sandbox/.claude/plugins/cache/claude-plugins-official/code-review/158ef95c6f7f",
+        "version": "158ef95c6f7f",
+        "installedAt": "2026-03-19T00:20:47.850Z",
+        "lastUpdated": "2026-03-19T00:20:47.850Z",
+        "gitCommitSha": "158ef95c6f7fc1b5629b5a915e2af2c07d15e237",
+        "projectPath": "/home/sandbox"
+      }
+    ],
+    "commit-commands@claude-plugins-official": [
+      {
+        "scope": "project",
+        "installPath": "/home/sandbox/.claude/plugins/cache/claude-plugins-official/commit-commands/158ef95c6f7f",
+        "version": "158ef95c6f7f",
+        "installedAt": "2026-03-19T00:20:47.850Z",
+        "lastUpdated": "2026-03-19T00:20:47.850Z",
+        "gitCommitSha": "158ef95c6f7fc1b5629b5a915e2af2c07d15e237",
+        "projectPath": "/home/sandbox"
+      }
+    ],
+    "security-guidance@claude-plugins-official": [
+      {
+        "scope": "project",
+        "installPath": "/home/sandbox/.claude/plugins/cache/claude-plugins-official/security-guidance/158ef95c6f7f",
+        "version": "158ef95c6f7f",
+        "installedAt": "2026-03-19T00:20:47.850Z",
+        "lastUpdated": "2026-03-19T00:20:47.850Z",
+        "gitCommitSha": "158ef95c6f7fc1b5629b5a915e2af2c07d15e237",
+        "projectPath": "/home/sandbox"
+      }
+    ],
+    "pr-review-toolkit@claude-plugins-official": [
+      {
+        "scope": "project",
+        "installPath": "/home/sandbox/.claude/plugins/cache/claude-plugins-official/pr-review-toolkit/158ef95c6f7f",
+        "version": "158ef95c6f7f",
+        "installedAt": "2026-03-19T00:20:47.850Z",
+        "lastUpdated": "2026-03-19T00:20:47.850Z",
+        "gitCommitSha": "158ef95c6f7fc1b5629b5a915e2af2c07d15e237",
+        "projectPath": "/home/sandbox"
+      }
+    ]
+  }
+}

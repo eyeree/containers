@@ -1,0 +1,16 @@
+services:
+  sandbox:
+    build: .
+    volumes:
+      - sandbox-home:/home/sandbox
+      - ${WORKSPACE_DIR:-.}:/home/sandbox/workspace
+    env_file:
+      - path: ${SANDBOX_ENV_FILE:-/dev/null}
+        required: false
+    environment:
+      - CLAUDE_CONFIG_DIR=/home/sandbox/.claude
+    stdin_open: true
+    tty: true
+
+volumes:
+  sandbox-home:
